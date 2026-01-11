@@ -13,8 +13,9 @@ import { connectDatabase, executeQuery, closeConnection } from './lib/database.j
  * Provides read-only access to SQLCipher-encrypted SQLite databases
  */
 
-// Get database password from environment variable
+// Get database configuration from environment variables
 const DB_PASSWORD = process.env.SQLCIPHER_PASSWORD;
+const DB_PATH = process.env.SQLCIPHER_DATABASE_PATH;
 
 // Create MCP server instance
 const server = new Server(
@@ -37,20 +38,20 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
         tools: [
             {
                 name: 'execute_query',
-                description: 'Execute a SELECT query on a SQLCipher-encrypted SQLite database. Only read-only queries are allowed.',
+                description: 'Execute a SELECT query on a SQLCipher-encrypted SQLite database. Only read-only queries are allowed. Database path can be provided as parameter or via SQLCIPHER_DATABASE_PATH environment variable.',
                 inputSchema: {
                     type: 'object',
                     properties: {
                         database_path: {
                             type: 'string',
-                            description: 'Path to the SQLCipher database file',
+                            description: 'Path to the SQLCipher database file (optional if SQLCIPHER_DATABASE_PATH is set)',
                         },
                         query: {
                             type: 'string',
                             description: 'SQL SELECT query to execute (read-only)',
                         },
                     },
-                    required: ['database_path', 'query'],
+                    required: ['query'],
                 },
             },
         ],
@@ -72,20 +73,25 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
             const { database_path, query } = args;
 
-            // Validate database_path
-            if (!database_path || typeof database_path !== 'string') {
-                throw new Error('database_path is required and must be a string');
-            }
-
             // Validate query
             if (!query || typeof query !== 'string') {
                 throw new Error('query is required and must be a string');
             }
 
+            // Determine database path: use parameter if provided, otherwise use environment variable
+            const dbPath = database_path || DB_PATH;
+            
+            // Validate database_path
+            if (!dbPath || typeof dbPath !== 'string') {
+                throw new Error(
+                    'database_path is required. Provide it as a parameter or set SQLCIPHER_DATABASE_PATH environment variable.'
+                );
+            }
+
             // Connect to database (password is optional - will work with unencrypted databases)
             let db = null;
             try {
-                db = await connectDatabase(database_path, DB_PASSWORD);
+                db = await connectDatabase(dbPath, DB_PASSWORD);
             } catch (error) {
                 return {
                     content: [
@@ -100,7 +106,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
             // Execute query
             try {
-                const result = executeQuery(db, query);
+                const result = await executeQuery(db, query);
 
                 // Format results for response
                 const responseText = formatQueryResults(result);
@@ -202,12 +208,21 @@ function formatQueryResults(result) {
  * Start the MCP server
  */
 async function main() {
-    // Check if password is set (warn but don't fail - might be set later)
+    // Check if configuration is set (warn but don't fail - might be set later)
+    const warnings = [];
+    
     if (!DB_PASSWORD) {
-        console.error(
-            'Warning: SQLCIPHER_PASSWORD environment variable is not set. ' +
-            'Database connections will fail until this is configured.'
-        );
+        warnings.push('SQLCIPHER_PASSWORD environment variable is not set. Database connections may fail if password is required.');
+    }
+    
+    if (!DB_PATH) {
+        warnings.push('SQLCIPHER_DATABASE_PATH environment variable is not set. Database path must be provided in each query.');
+    }
+    
+    if (warnings.length > 0) {
+        console.error('Warning: ' + warnings.join(' '));
+    } else {
+        console.error('Configuration loaded: Database path and password set via environment variables.');
     }
 
     // Create stdio transport
