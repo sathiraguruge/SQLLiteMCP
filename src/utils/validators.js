@@ -56,3 +56,92 @@ export function validateDatabasePath(database_path) {
         throw new Error('database_path is required and must be a string');
     }
 }
+
+/**
+ * Validate table name parameter
+ * @param {any} tableName - Table name to validate
+ * @throws {Error} If tableName is invalid
+ */
+export function validateTableName(tableName) {
+    if (!tableName) {
+        throw new Error('table_name is required');
+    }
+    
+    if (typeof tableName !== 'string' && !Array.isArray(tableName)) {
+        throw new Error('table_name must be a string or array of strings');
+    }
+    
+    if (Array.isArray(tableName)) {
+        if (tableName.length === 0) {
+            throw new Error('table_name array cannot be empty');
+        }
+        tableName.forEach((name, index) => {
+            if (typeof name !== 'string') {
+                throw new Error(`table_name[${index}] must be a string`);
+            }
+        });
+    }
+}
+
+/**
+ * Validate column name parameter
+ * @param {any} columnName - Column name to validate
+ * @throws {Error} If columnName is invalid
+ */
+export function validateColumnName(columnName) {
+    if (!columnName) {
+        throw new Error('column_name is required');
+    }
+    
+    if (typeof columnName !== 'string' && !Array.isArray(columnName)) {
+        throw new Error('column_name must be a string or array of strings');
+    }
+    
+    if (Array.isArray(columnName)) {
+        if (columnName.length === 0) {
+            throw new Error('column_name array cannot be empty');
+        }
+        columnName.forEach((name, index) => {
+            if (typeof name !== 'string') {
+                throw new Error(`column_name[${index}] must be a string`);
+            }
+        });
+    }
+}
+
+/**
+ * Validate pattern parameter for search operations
+ * @param {any} pattern - Pattern to validate
+ * @throws {Error} If pattern is invalid
+ */
+export function validatePattern(pattern) {
+    if (!pattern || typeof pattern !== 'string') {
+        throw new Error('pattern is required and must be a string');
+    }
+}
+
+/**
+ * Validate numeric parameter
+ * @param {any} value - Value to validate
+ * @param {string} paramName - Parameter name for error messages
+ * @param {number} min - Minimum allowed value
+ * @param {number} max - Maximum allowed value
+ * @returns {number} Validated number
+ * @throws {Error} If value is invalid
+ */
+export function validateNumericParameter(value, paramName, min = 0, max = Number.MAX_SAFE_INTEGER) {
+    if (value === undefined || value === null) {
+        return undefined;
+    }
+    
+    const num = Number(value);
+    if (isNaN(num)) {
+        throw new Error(`${paramName} must be a number`);
+    }
+    
+    if (num < min || num > max) {
+        throw new Error(`${paramName} must be between ${min} and ${max}`);
+    }
+    
+    return num;
+}

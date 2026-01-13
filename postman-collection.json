@@ -1,82 +1,647 @@
 {
 	"info": {
 		"name": "SQLCipher MCP Server",
-		"description": "Collection for testing SQLCipher MCP HTTP Server",
+		"description": "Collection for testing SQLCipher MCP HTTP Server with all 18 tools and 7 prompts",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
-			"name": "Health Check",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:3000/health",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "3000",
-					"path": [
-						"health"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Server Info",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:3000/api/info",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "3000",
-					"path": [
-						"api",
-						"info"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Execute Query",
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"database_path\": \"C:\\\\path\\\\to\\\\your\\\\database.db\",\n    \"query\": \"SELECT * FROM table_name LIMIT 10\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
+			"name": "Server Status",
+			"item": [
+				{
+					"name": "Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/health",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["health"]
 						}
 					}
 				},
-				"url": {
-					"raw": "http://localhost:3000/api/query",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "3000",
-					"path": [
-						"api",
-						"query"
-					]
+				{
+					"name": "Server Info",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/info",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "info"]
+						}
+					}
 				}
-			},
-			"response": []
+			]
+		},
+		{
+			"name": "Query Execution",
+			"item": [
+				{
+					"name": "Execute Query",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"database_path\": \"C:\\\\path\\\\to\\\\your\\\\database.db\",\n    \"query\": \"SELECT * FROM users LIMIT 10\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/query",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "query"]
+						}
+					}
+				},
+				{
+					"name": "Explain Query Plan",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"database_path\": \"C:\\\\path\\\\to\\\\your\\\\database.db\",\n    \"query\": \"SELECT * FROM users WHERE email = 'test@example.com'\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tool/explain_query",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "tool", "explain_query"]
+						}
+					}
+				},
+				{
+					"name": "Validate Query Syntax",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"database_path\": \"C:\\\\path\\\\to\\\\your\\\\database.db\",\n    \"query\": \"SELECT * FROM users WHERE id = ?\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tool/validate_query_syntax",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "tool", "validate_query_syntax"]
+						}
+					}
+				},
+				{
+					"name": "Suggest Query",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"database_path\": \"C:\\\\path\\\\to\\\\your\\\\database.db\",\n    \"table_name\": \"users\",\n    \"intent\": \"Find active users\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tool/suggest_query",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "tool", "suggest_query"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Schema Exploration",
+			"item": [
+				{
+					"name": "List Tables",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"database_path\": \"C:\\\\path\\\\to\\\\your\\\\database.db\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tool/list_tables",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "tool", "list_tables"]
+						}
+					}
+				},
+				{
+					"name": "Get Table Schema",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"database_path\": \"C:\\\\path\\\\to\\\\your\\\\database.db\",\n    \"table_name\": \"users\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tool/get_table_schema",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "tool", "get_table_schema"]
+						}
+					}
+				},
+				{
+					"name": "List Columns",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"database_path\": \"C:\\\\path\\\\to\\\\your\\\\database.db\",\n    \"table_name\": \"users\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tool/list_columns",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "tool", "list_columns"]
+						}
+					}
+				},
+				{
+					"name": "Get Foreign Keys",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"database_path\": \"C:\\\\path\\\\to\\\\your\\\\database.db\",\n    \"table_name\": \"orders\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tool/get_foreign_keys",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "tool", "get_foreign_keys"]
+						}
+					}
+				},
+				{
+					"name": "Get Indexes",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"database_path\": \"C:\\\\path\\\\to\\\\your\\\\database.db\",\n    \"table_name\": \"users\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tool/get_indexes",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "tool", "get_indexes"]
+						}
+					}
+				},
+				{
+					"name": "Find Related Tables",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"database_path\": \"C:\\\\path\\\\to\\\\your\\\\database.db\",\n    \"table_name\": \"users\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tool/find_related_tables",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "tool", "find_related_tables"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Database & Table Info",
+			"item": [
+				{
+					"name": "Get Database Info",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"database_path\": \"C:\\\\path\\\\to\\\\your\\\\database.db\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tool/get_database_info",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "tool", "get_database_info"]
+						}
+					}
+				},
+				{
+					"name": "Get Table Info",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"database_path\": \"C:\\\\path\\\\to\\\\your\\\\database.db\",\n    \"table_name\": \"users\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tool/get_table_info",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "tool", "get_table_info"]
+						}
+					}
+				},
+				{
+					"name": "Test Connection",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"database_path\": \"C:\\\\path\\\\to\\\\your\\\\database.db\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tool/test_connection",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "tool", "test_connection"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Data Analysis",
+			"item": [
+				{
+					"name": "Get Table Statistics",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"database_path\": \"C:\\\\path\\\\to\\\\your\\\\database.db\",\n    \"table_name\": \"users\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tool/get_table_statistics",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "tool", "get_table_statistics"]
+						}
+					}
+				},
+				{
+					"name": "Sample Table Data",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"database_path\": \"C:\\\\path\\\\to\\\\your\\\\database.db\",\n    \"table_name\": \"users\",\n    \"limit\": 10\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tool/sample_table_data",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "tool", "sample_table_data"]
+						}
+					}
+				},
+				{
+					"name": "Get Column Statistics",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"database_path\": \"C:\\\\path\\\\to\\\\your\\\\database.db\",\n    \"table_name\": \"users\",\n    \"column_name\": \"email\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tool/get_column_statistics",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "tool", "get_column_statistics"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Search",
+			"item": [
+				{
+					"name": "Search Tables",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"database_path\": \"C:\\\\path\\\\to\\\\your\\\\database.db\",\n    \"pattern\": \"user\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tool/search_tables",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "tool", "search_tables"]
+						}
+					}
+				},
+				{
+					"name": "Search Columns",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"database_path\": \"C:\\\\path\\\\to\\\\your\\\\database.db\",\n    \"pattern\": \"email\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tool/search_columns",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "tool", "search_columns"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Prompts",
+			"item": [
+				{
+					"name": "Explore Database Schema",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"prompt\": \"explore_database_schema\",\n    \"args\": {\n        \"database_path\": \"C:\\\\path\\\\to\\\\your\\\\database.db\"\n    }\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/prompt",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "prompt"]
+						}
+					}
+				},
+				{
+					"name": "Describe Table Structure",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"prompt\": \"describe_table_structure\",\n    \"args\": {\n        \"database_path\": \"C:\\\\path\\\\to\\\\your\\\\database.db\",\n        \"table_name\": \"users\"\n    }\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/prompt",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "prompt"]
+						}
+					}
+				},
+				{
+					"name": "Find Data Relationships",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"prompt\": \"find_data_relationships\",\n    \"args\": {\n        \"database_path\": \"C:\\\\path\\\\to\\\\your\\\\database.db\",\n        \"table_name\": \"users\"\n    }\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/prompt",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "prompt"]
+						}
+					}
+				},
+				{
+					"name": "Generate Query Template",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"prompt\": \"generate_query_template\",\n    \"args\": {\n        \"database_path\": \"C:\\\\path\\\\to\\\\your\\\\database.db\",\n        \"table_name\": \"users\",\n        \"intent\": \"Find all active users\"\n    }\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/prompt",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "prompt"]
+						}
+					}
+				},
+				{
+					"name": "Optimize Query",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"prompt\": \"optimize_query\",\n    \"args\": {\n        \"database_path\": \"C:\\\\path\\\\to\\\\your\\\\database.db\",\n        \"query\": \"SELECT * FROM users WHERE email LIKE '%@example.com'\"\n    }\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/prompt",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "prompt"]
+						}
+					}
+				},
+				{
+					"name": "Analyze Table Data",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"prompt\": \"analyze_table_data\",\n    \"args\": {\n        \"database_path\": \"C:\\\\path\\\\to\\\\your\\\\database.db\",\n        \"table_name\": \"users\"\n    }\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/prompt",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "prompt"]
+						}
+					}
+				},
+				{
+					"name": "Compare Tables",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"prompt\": \"compare_tables\",\n    \"args\": {\n        \"database_path\": \"C:\\\\path\\\\to\\\\your\\\\database.db\",\n        \"table1_name\": \"users\",\n        \"table2_name\": \"customers\"\n    }\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/prompt",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "prompt"]
+						}
+					}
+				}
+			]
 		}
 	]
 }
