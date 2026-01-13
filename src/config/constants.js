@@ -5,7 +5,7 @@
 
 export const SERVER_CONFIG = {
     name: 'sqlcipher-mcp-server',
-    version: '1.0.2',
+    version: '1.0.4',
     description: 'MCP Server for querying SQLCipher-encrypted SQLite databases',
 };
 
