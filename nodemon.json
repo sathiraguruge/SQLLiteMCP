@@ -1,5 +1,6 @@
 {
   "watch": [
+    "src",
     "lib",
     "index.js",
     "server-http.js"

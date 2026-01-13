@@ -2,25 +2,6 @@
   "name": "sqlcipher-mcp-server",
   "version": "1.0.2",
   "description": "MCP Server for querying SQLCipher-encrypted SQLite databases",
-  "main": "index.js",
-  "type": "module",
-  "bin": {
-    "sqlcipher-mcp-server": "./index.js"
-  },
-  "files": [
-    "index.js",
-    "lib/**/*",
-    "README.md",
-    "LICENSE"
-  ],
-  "scripts": {
-    "start": "node index.js",
-    "start:http": "node server-http.js",
-    "test:http": "node server-http.js",
-    "dev": "nodemon index.js",
-    "dev:http": "nodemon server-http.js",
-    "prepublishOnly": "npm test || exit 0"
-  },
   "keywords": [
     "mcp",
     "sqlcipher",
@@ -30,25 +11,46 @@
     "encrypted-database",
     "cursor-ide"
   ],
-  "author": "Sathira Guruge",
-  "license": "MIT",
+  "homepage": "https://github.com/sathiraguruge/SQLLiteMCP",
+  "bugs": {
+    "url": "https://github.com/sathiraguruge/SQLLiteMCP/issues"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/sathiraguruge/SQLLiteMCP.git"
   },
-  "bugs": {
-    "url": "https://github.com/sathiraguruge/SQLLiteMCP/issues"
+  "license": "MIT",
+  "author": "Sathira Guruge",
+  "main": "index.js",
+  "bin": {
+    "sqlcipher-mcp-server": "./index.js"
   },
-  "homepage": "https://github.com/sathiraguruge/SQLLiteMCP",
-  "engines": {
-    "node": ">=18.0.0"
+  "type": "module",
+  "files": [
+    "index.js",
+    "server-http.js",
+    "src/**/*",
+    "lib/**/*",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "start:http": "node server-http.js",
+    "dev:http": "nodemon server-http.js",
+    "test:http": "node server-http.js",
+    "prepublishOnly": "npm test || exit 0"
   },
   "dependencies": {
     "@journeyapps/sqlcipher": "^5.1.1",
-    "@modelcontextprotocol/sdk": "^0.5.0",
+    "@modelcontextprotocol/sdk": "^1.25.2",
     "express": "^4.22.1"
   },
   "devDependencies": {
     "nodemon": "^3.1.11"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }
